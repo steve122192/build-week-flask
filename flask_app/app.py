@@ -14,7 +14,11 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    
+    @app.route("/")
+    def root():
+        return ('Hello World')
+
+
     @app.route("/<id>")
     def get_song_data(id=None):
         try:
