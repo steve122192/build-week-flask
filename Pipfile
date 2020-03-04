@@ -13,6 +13,7 @@ spotipy = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
 pandas = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
