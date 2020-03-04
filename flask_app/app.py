@@ -3,6 +3,10 @@ from flask import Flask, request, render_template, jsonify, flash, redirect
 from flask_migrate import Migrate
 from flask_app.models import db, migrate, Song
 #from review.game_service import api
+import joblib
+import pandas as pd
+filename = 'Nearest_Neighbors_2.sav'
+nn = joblib.load(filename)
 
 
 
@@ -23,12 +27,28 @@ def create_app():
     def get_song_data(id=None):
         try:
             x = Song.query.filter(Song.id == id).all()
+            breakpoint()
             x = x[0].__dict__
             del x["_sa_instance_state"]
+            del x["artist_name"]
+            del x["track_id"]
+            del x["track_name"]
+            del x["id"]
+            del x["duration_ms"]
+            del x["time_signature"]
+            del x["popularity"]
+            x = pd.DataFrame([x], columns=x.keys())
+            predictions = nn.kneighbors(x)[1][0]
+            df_top_similar = df.iloc[predictions]
+            
         
+            
+            
+            
             return jsonify(x)
         except:
             return jsonify({"message": "Song Not Found!"})
+
     
     
     return app
