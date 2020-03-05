@@ -7,7 +7,7 @@ DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
-connection = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST)
+connection = psycopg2.connect(dbname=DB_NAME, user=DB_USER, password="qLJzcc_KrEVBeCdqnhlKayggOHmHolNX", host=DB_HOST)
 print("CONNECTION:", connection)
 cursor = connection.cursor()
 print("CURSOR:", cursor)
@@ -34,10 +34,10 @@ print("CURSOR:", cursor)
 # """
 # cursor.execute(query)
 # connection.commit()
-df = pd.read_csv("https://raw.githubusercontent.com/mahfuz978/DS-repo/master/SpotifyAudioFeaturesApril2019.csv")
+df = pd.read_csv("flask_app/SpotifyAudioFeaturesApril2019.csv")
 df['track_name'] = df['track_name'].str.replace("'", '')
 df['artist_name'] = df['artist_name'].str.replace("'", '')
-cursor.execute('DELETE FROM song')
+df = df.head(20000)
 
 for row in df.itertuples():
     insert_rows = """
