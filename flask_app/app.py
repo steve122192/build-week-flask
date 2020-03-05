@@ -27,7 +27,7 @@ def create_app():
     def get_song_data(id=None):
         try:
             x = Song.query.filter(Song.id == id).all()
-            breakpoint()
+            
             x = x[0].__dict__
             del x["_sa_instance_state"]
             del x["artist_name"]
@@ -38,8 +38,11 @@ def create_app():
             del x["time_signature"]
             del x["popularity"]
             x = pd.DataFrame([x], columns=x.keys())
+            #breakpoint()
             predictions = nn.kneighbors(x)[1][0]
-            df_top_similar = df.iloc[predictions]
+            predictions = predictions.tolist()
+            predictions = Song.query.filter(Song.id.in_(predictions))
+            
             
         
             
