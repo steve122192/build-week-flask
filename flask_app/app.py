@@ -70,7 +70,6 @@ def create_app():
             'tempo',
             'valence'
             ]
-            #breakpoint()
             song = df.loc[df['track_id'] == id]
             song = song.iloc[0]['track_id']
             x=[]
@@ -78,7 +77,8 @@ def create_app():
             track = df[df['track_id'].isin(x)][features]
             predictions      = nn.kneighbors(track)[1][0]
             df_top_similar   = df.iloc[predictions]
-            json_top_similar = json.loads(df_top_similar.to_json())
+            json_top_similar = df_top_similar.to_json(orient='records')
+            #json_top_similar = json.loads(df_top_similar.to_json())
             
             return json_top_similar
         except:
