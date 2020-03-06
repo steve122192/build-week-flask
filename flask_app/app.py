@@ -6,6 +6,8 @@ import json
 #from review.game_service import api
 import joblib
 import pandas as pd
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
 filename = 'Nearest_Neighbors_2.sav'
 nn = joblib.load(filename)
 
@@ -53,8 +55,8 @@ def create_app():
     #     except:
     #         return jsonify({"message": "Song Not Found!"})
 
-    @app.route("/df/<id>")
-    def get_df_data(id=None):
+    @app.route("/predict/<id>")
+    def get_predictions(id=None):
         try:
             df = pd.read_csv('http://www.zernach.com/wp-content/uploads/2020/02/SpotifyAudioFeaturesApril2019.csv')
             target   = 'track_id'
@@ -83,7 +85,24 @@ def create_app():
             return json_top_similar
         except:
             return jsonify({"message": "Song Not Found!"})
-            
+
+    @app.route("/data/<id>")
+    def get_data(id=None):
+        try:
+            spotify = spotipy.Spotify(
+                client_credentials_manager=SpotifyClientCredentials(
+                    client_id='646dc0908673464f98f0bb00ab896e4d',
+                    client_secret='f8541fbcea154850b69b528c995ace80'))
+            x = spotify.audio_features(id)
+            x = x[0]
+            del x["uri"]
+            del x["analysis_url"]
+            del x["track_href"] 
+            del x["type"]
+            return jsonify(x)
+        except:
+            return jsonify({"message": "Song Not Found!"})  
+
 
 
     
